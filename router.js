@@ -53,7 +53,7 @@ router.post('/register', signupValidation, (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
     db.query(
-      `SELECT * FROM users WHERE name = ${db.escape(req.body.name)};`,
+      `SELECT * FROM users WHERE email = ${db.escape(req.body.email)};`,
       (err, result) => {
         // user does not exists
         if (err) {
@@ -65,7 +65,7 @@ router.post('/login', (req, res, next) => {
   
         if (!result.length) {
           return res.status(401).send({
-            msg: 'Username or password is incorrect!'
+            msg: 'Email or password is incorrect!'
           });
         }
   
@@ -78,13 +78,13 @@ router.post('/login', (req, res, next) => {
             if (bErr) {
               throw bErr;
               return res.status(401).send({
-                msg: 'Username or password is incorrect!'
+                msg: 'Email or password is incorrect!'
               });
             }
   
             if (bResult) {
               const token = jwt.sign({
-                  username: result[0].username,
+                  email: result[0].email,
                   userId: result[0].id
                 },
                 'SECRETKEY', {
@@ -93,7 +93,7 @@ router.post('/login', (req, res, next) => {
               );
   
               db.query(
-                `UPDATE users SET last_login = now() WHERE id = '${result[0].id}'`
+                `UPDATE users SET lastLogin = now() WHERE id = ${result[0].id}`
               );
               return res.status(200).send({
                 msg: 'Logged in!',
@@ -102,7 +102,7 @@ router.post('/login', (req, res, next) => {
               });
             }
             return res.status(401).send({
-              msg: 'Username or password is incorrect!'
+              msg: 'Email or password is incorrect!'
             });
           }
         );
