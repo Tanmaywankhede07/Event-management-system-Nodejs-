@@ -6,6 +6,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
  
+//Register User
 router.post('/register', signupValidation, (req, res, next) => {
   db.query(
     `SELECT * FROM users WHERE LOWER(email) = LOWER(${db.escape(
@@ -48,9 +49,7 @@ router.post('/register', signupValidation, (req, res, next) => {
   );
 });
 
-//LOGIN (AUTHENTICATE USER)
-// routes/router.js
-
+//Login User
 router.post('/login', (req, res, next) => {
     db.query(
       `SELECT * FROM users WHERE email = ${db.escape(req.body.email)};`,
@@ -109,5 +108,15 @@ router.post('/login', (req, res, next) => {
       }
     );
   });
+
+//Logout User
+router.get('/logout', async (req, res) => {
+    if (req.body.email) {
+        delete req.body.email;
+        res.json({result: 'SUCCESS'});
+    } else {
+        res.json({result: 'ERROR', message: 'User is not logged in.'});
+    }
+});
  
 module.exports = router;
