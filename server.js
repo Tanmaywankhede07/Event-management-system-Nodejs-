@@ -6,6 +6,8 @@ const cors = require('cors');
 const indexRouter = require('./router.js');
  
 const app = express();
+
+const PORT = process.env.PORT;
  
 app.use(express.json());
  
@@ -29,4 +31,4 @@ app.use((err, req, res, next) => {
     });
 });
  
-app.listen(3000,() => console.log('Server is running on port 3000'));
+app.listen(PORT,() => console.log('Server is running on port 3000'));
